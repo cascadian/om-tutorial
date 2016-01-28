@@ -70,20 +70,22 @@
 
 (defui Person
   Object
-  (initLocalState [this] {})                                ;; TODO (ex 3): Add initial local state here
+  (initLocalState [this] {:checked true})                                ;; TODO (ex 3): Add initial local state here
 
   (render [this]
     ; TODO: (ex 4) obtain the 'computed' onDelete handler
     (let [props (om/props this)
           name (:person/name props)                                       ;; TODO (ex 1): Get the Om properties from this
           mate (:person/mate props)
-          checked false]                                    ;; TODO (ex 3): component local state
+          checked (:checked (om/get-state this))]                                    ;; TODO (ex 3): component local state
       (dom/li nil
         (dom/input #js {:type    "checkbox"
-                        :onClick (fn [e] (println "TODO ex 3"))
-                        :checked false                      ; TODO: ex-3: modify local state
+                        :onClick (fn [e] (om/update-state! this update :checked not))
+                        :checked checked                      ; TODO: ex-3: modify local state
                         })
-        (dom/span nil name)                                 ; TODO: ex 3. Make name bold when checked
+        (dom/span (if checked
+                    #js {:style #js {:font-weight "bold"}}
+                    nil) name)                                 ; TODO: ex 3. Make name bold when checked
         (dom/button nil "X")                                ; TODO: (ex 4) call onDelete handler, if present
         (when mate (dom/ul nil (om-person mate)))))))
 
