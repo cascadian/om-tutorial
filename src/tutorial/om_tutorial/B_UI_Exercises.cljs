@@ -74,8 +74,9 @@
 
   (render [this]
     ; TODO: (ex 4) obtain the 'computed' onDelete handler
-    (let [name "name"                                       ;; TODO (ex 1): Get the Om properties from this
-          mate nil
+    (let [props (om/props this)
+          name (:person/name props)                                       ;; TODO (ex 1): Get the Om properties from this
+          mate (:person/mate props)
           checked false]                                    ;; TODO (ex 3): component local state
       (dom/li nil
         (dom/input #js {:type    "checkbox"
