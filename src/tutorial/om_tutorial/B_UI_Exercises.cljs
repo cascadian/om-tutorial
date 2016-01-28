@@ -109,7 +109,7 @@
   Object
   (render [this]
     ; TODO: (ex 4): Create a deletePerson function
-    (let [people []]                                        ; TODO (ex 2): Get yo stuff
+    (let [people (:people (om/props this))]                                        ; TODO (ex 2): Get yo stuff
       (dom/div nil
         (if (= nil people)
           (dom/span nil "Loading...")
@@ -124,14 +124,12 @@
 (defui Root
   Object
   (render [this]
-    (let [widget nil
-          new-person nil
-          last-error nil]                                   ; TODO (ex 2): Get yo stuff
+    (let [{:keys [widget new-person last-error]} (om/props this)]                                   ; TODO (ex 2): Get yo stuff
       (dom/div nil
         (dom/div nil (when (not= "" last-error) (str "Error " last-error)))
         (dom/div nil
           (people-widget widget)
-          (dom/input #js {:type "text"})
+          (dom/input #js {:type "text" :value new-person})
           (dom/button #js {} "Add Person"))))))
 
 (def om-root (om/factory Root))
