@@ -74,7 +74,8 @@
 
   (render [this]
     ; TODO: (ex 4) obtain the 'computed' onDelete handler
-    (let [props (om/props this)
+    (let [onDelete (:onDelete (om/get-computed this))
+          props (om/props this)
           name (:person/name props)                                       ;; TODO (ex 1): Get the Om properties from this
           mate (:person/mate props)
           checked (:checked (om/get-state this))]                                    ;; TODO (ex 3): component local state
@@ -84,9 +85,9 @@
                         :checked checked                      ; TODO: ex-3: modify local state
                         })
         (dom/span (if checked
-                    #js {:style #js {:font-weight "bold"}}
+                    #js {:style #js {:fontWeight "bold"}}
                     nil) name)                                 ; TODO: ex 3. Make name bold when checked
-        (dom/button nil "X")                                ; TODO: (ex 4) call onDelete handler, if present
+        (dom/button #js {:onClick #(onDelete props)} "X")                                ; TODO: (ex 4) call onDelete handler, if present
         (when mate (dom/ul nil (om-person mate)))))))
 
 (def om-person (om/factory Person))
@@ -111,7 +112,8 @@
   Object
   (render [this]
     ; TODO: (ex 4): Create a deletePerson function
-    (let [people (:people (om/props this))]                                        ; TODO (ex 2): Get yo stuff
+    (let [delete-person (fn [p] (js/console.log "delete" (:person/name p)))
+          people (:people (om/props this))]                                        ; TODO (ex 2): Get yo stuff
       (dom/div nil
         (if (= nil people)
           (dom/span nil "Loading...")
@@ -119,7 +121,7 @@
             (dom/button #js {} "Save")
             (dom/button #js {} "Refresh List")
             ; TODO: (ex 4) pass deletePerson as the onDelete handler to person element
-            (dom/ul nil (map #(om-person %) people))))))))
+            (dom/ul nil (map #(om-person (om/computed % {:onDelete delete-person})) people))))))))
 
 (def people-widget (om/factory PeopleWidget))
 
